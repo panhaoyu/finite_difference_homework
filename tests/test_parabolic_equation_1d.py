@@ -14,7 +14,7 @@ def test_accurate():
 
 
 def test_complex():
-    """一个较为复杂的系数，会存在误差"""
+    """一个较为复杂的系数"""
     calculator = module.Parabolic1D(a=4, time_step=0.01, grid_step=1)
     result = calculator.forward_difference(data=np.array([4, 9, 16]), left=1, right=25)
     assert check_equality(result, [4.08, 9.08, 16.08])
