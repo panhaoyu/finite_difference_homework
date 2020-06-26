@@ -13,4 +13,5 @@ def check_equality(array1: np.ndarray, array2: np.ndarray, criterion=1E-10):
     array2 = array2 if isinstance(array2, np.ndarray) else np.array(array2)
     assert array1.shape == array2.shape
     diff = array1 - array2
-    return np.sqrt(sum(diff * diff) / len(array1)) < criterion
+    result = np.sqrt(sum(diff * diff) / len(array1)) < criterion
+    return result

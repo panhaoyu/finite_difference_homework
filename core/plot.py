@@ -10,11 +10,11 @@ np.set_printoptions(precision=2, suppress=True)  # 精度，不使用科学计�
 np.set_printoptions(threshold=np.inf)  # 过多的行，不会变成省略号
 
 
-def plot_line(x, y, *args, ax=None, **kwargs):
-    figure: plt.Figure = plt.gcf()
-    if not ax:
-        ax = plt.gca()
-    ax.plot(x, y, *args, **kwargs)
+def plot_line(x, y, *args, figure: plt.Figure = None, axes: plt.Axes = None, **kwargs):
+    figure: plt.Figure = plt.gcf() if figure is None else figure
+    if not axes:
+        axes = plt.gca()
+    axes.plot(x, y, *args, **kwargs)
     return figure
 
 

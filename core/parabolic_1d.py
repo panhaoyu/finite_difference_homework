@@ -94,3 +94,22 @@ class Parabolic1D(object):
 
         u1 = _np.dot(_np.linalg.inv(matrix_next), vector_this)[0:, 0]
         return u1
+
+    def du_fort_frankel(
+            self, data_prev: _ndarray, data_this: _ndarray,
+            left_this: float, right_this: float):
+        """
+        采用Du fort-Frankel格式进行计算
+        :param data_prev: n-1层的数据
+        :param data_this: n层的数据
+        :param left_this: n层的左边值
+        :param right_this: n层的右边值
+        :return: n+1层的数据
+        """
+        b = 2 * self.a_lmd  # 方程的常数
+        data_prev = data_prev.astype(float)
+        data_this = data_this.astype(float)
+        data_this_minus_1 = self._minus(data_this, left_this)
+        data_this_plus_1 = self._plus(data_this, right_this)
+        result = (data_prev * (1 - b) + b * (data_this_minus_1 + data_this_plus_1)) / (1 + b)
+        return result
