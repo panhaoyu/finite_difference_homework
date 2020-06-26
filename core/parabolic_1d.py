@@ -60,5 +60,37 @@ class Parabolic1D(object):
         data_next = _np.dot(matrix, data)
         return data_next
 
-    def crank_nicolson(self, data, left, right):
-        pass
+    def crank_nicolson(self, data, left, right, left_next, right_next):
+        """
+        采用Crank Nicolson进行计算
+
+        :param data: 前一层的值
+        :param left: 前一层的左边值
+        :param right: 前一层的右边值
+        :param left_next: 后一层的左边值
+        :param right_next: 后一层的右边值
+        :return:
+        """
+        b = self.a_lmd / 2  # 系数
+
+        # 计算前一层的矩阵
+        length = len(data)
+        matrix_prev = _np.diag(_np.ones(length) * (1 - 2 * b)).astype(float)
+        matrix_prev[1:, :-1] += _np.diag(_np.ones(length - 1) * b)
+        matrix_prev[:-1, 1:] += _np.diag(_np.ones(length - 1) * b)
+
+        # 计算前一层的向量
+        vector_prev = _np.dot(matrix_prev, data)
+        vector_prev = _np.transpose([vector_prev])
+
+        # 采用边值修正前一层的向量
+        vector_prev[0] += b * (left + left_next)
+        vector_prev[-1] += b * (right + right_next)
+
+        # 计算下一层的矩阵
+        matrix_next = _np.diag(_np.ones(length) * (1 + 2 * b)).astype(float)
+        matrix_next[1:, :-1] += _np.diag(_np.ones(length - 1) * (-b))
+        matrix_next[:-1, 1:] += _np.diag(_np.ones(length - 1) * (-b))
+
+        u1 = _np.dot(_np.linalg.inv(matrix_next), vector_prev)[0:, 0]
+        return u1
