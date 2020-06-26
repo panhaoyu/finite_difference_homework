@@ -10,5 +10,6 @@ def test_forward_difference():
     a = 1
     time_step = 0.1
     grid_step = 1
-    result = module.forward_difference(data, left, right, a, time_step, grid_step)
+    calculator = module.Parabolic1D(data, left, right, a, time_step, grid_step)
+    result = calculator.forward_difference()
     assert check_equality(result, np.array([1.4, 2, 3.1]))
