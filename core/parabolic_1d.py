@@ -4,7 +4,7 @@ from numpy import ndarray as _ndarray
 
 
 class Parabolic1D(object):
-    def __init__(self, a: float = None, time_step: float = None, grid_step: float = None):
+    def __init__(self, a: float, time_step: float, grid_step: float):
         """
         在对象进行初始化时，输入描述方程的一些参数，即在每一次时间步前进的过程中不变的数
         :param a: 方程中的常数
@@ -19,13 +19,16 @@ class Parabolic1D(object):
 
     @staticmethod
     def _plus(data: _np.ndarray, right: float):
+        data = data.copy()
         return _np.hstack([data[1:], right])
 
     @staticmethod
     def _minus(data: _np.ndarray, left: float):
+        data = data.copy()
         return _np.hstack([left, data[:-1]])
 
     def forward_difference(self, data: _np.ndarray, left: float, right: float):
+        data = data.copy()
         data_plus = self._plus(data, right)
         data_minus = self._minus(data, left)
         u_next = data + self.a * self.lmd * (data_plus - 2 * data + data_minus)

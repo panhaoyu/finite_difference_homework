@@ -20,3 +20,13 @@ def test_complex():
     assert check_equality(result, [4.08, 9.08, 16.08])
     result = calculator.backward_difference([4, 9, 16], left_next=1.08, right_next=25.08)
     assert check_equality(result, [4.08, 9.08, 16.08])
+
+
+def test_complex_2():
+    """这里的误差会偏大一些"""
+    calculator = module.Parabolic1D(a=1, time_step=0.01, grid_step=1)
+    x = np.arange(1, 8)
+    u0 = x
+    u1 = calculator.forward_difference(data=u0[1:-1], left=u0[0], right=u0[-1])
+    result = calculator.backward_difference(data=u0[2:-2], left_next=u1[0], right_next=u1[-1])
+    assert check_equality(u1[1:-1], result, criterion=1E5)
