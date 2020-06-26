@@ -28,7 +28,7 @@ class Parabolic1D(object):
         return _np.hstack([left, data[:-1]])
 
     def forward_difference(self, data: _np.ndarray, left: float, right: float):
-        data = data.copy()
+        data = data.astype(float)
         data_plus = self._plus(data, right)
         data_minus = self._minus(data, left)
         u_next = data + self.a * self.lmd * (data_plus - 2 * data + data_minus)
@@ -43,10 +43,10 @@ class Parabolic1D(object):
         :param right_next: 后一层的右侧数据
         :return:
         """
-        data = data.copy()
+        data = data.astype(float)
 
         # 计算系数矩阵的逆
-        matrix = _np.diag(_np.ones(len(data)) * (2 * self.a_lmd + 1))
+        matrix = _np.diag(_np.ones(len(data)) * (2 * self.a_lmd + 1)).astype(float)
         for index in range(len(data) - 1):
             matrix[index, index + 1] -= self.a_lmd
             matrix[index + 1, index] -= self.a_lmd
@@ -59,3 +59,6 @@ class Parabolic1D(object):
         # 计算下一时间步的值
         data_next = _np.dot(matrix, data)
         return data_next
+
+    def crank_nicolson(self, data, left, right):
+        pass
