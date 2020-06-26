@@ -75,22 +75,22 @@ class Parabolic1D(object):
 
         # 计算前一层的矩阵
         length = len(data)
-        matrix_prev = _np.diag(_np.ones(length) * (1 - 2 * b)).astype(float)
-        matrix_prev[1:, :-1] += _np.diag(_np.ones(length - 1) * b)
-        matrix_prev[:-1, 1:] += _np.diag(_np.ones(length - 1) * b)
+        matrix_this = _np.diag(_np.ones(length) * (1 - 2 * b)).astype(float)
+        matrix_this[1:, :-1] += _np.diag(_np.ones(length - 1) * b)
+        matrix_this[:-1, 1:] += _np.diag(_np.ones(length - 1) * b)
 
         # 计算前一层的向量
-        vector_prev = _np.dot(matrix_prev, data)
-        vector_prev = _np.transpose([vector_prev])
+        vector_this = _np.dot(matrix_this, data)
+        vector_this = _np.transpose([vector_this])
 
         # 采用边值修正前一层的向量
-        vector_prev[0] += b * (left + left_next)
-        vector_prev[-1] += b * (right + right_next)
+        vector_this[0] += b * (left + left_next)
+        vector_this[-1] += b * (right + right_next)
 
         # 计算下一层的矩阵
         matrix_next = _np.diag(_np.ones(length) * (1 + 2 * b)).astype(float)
         matrix_next[1:, :-1] += _np.diag(_np.ones(length - 1) * (-b))
         matrix_next[:-1, 1:] += _np.diag(_np.ones(length - 1) * (-b))
 
-        u1 = _np.dot(_np.linalg.inv(matrix_next), vector_prev)[0:, 0]
+        u1 = _np.dot(_np.linalg.inv(matrix_next), vector_this)[0:, 0]
         return u1
