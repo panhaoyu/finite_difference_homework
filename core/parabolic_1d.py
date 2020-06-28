@@ -27,14 +27,14 @@ class Parabolic1D(object):
         data = data.copy()
         return _np.hstack([left, data[:-1]])
 
-    def forward_difference(self, data: _np.ndarray, left: float, right: float):
+    def forward(self, data: _np.ndarray, left: float, right: float):
         data = data.astype(float)
         data_plus = self._plus(data, right)
         data_minus = self._minus(data, left)
         u_next = data + self.a * self.lmd * (data_plus - 2 * data + data_minus)
         return u_next
 
-    def backward_difference(self, data: _np.ndarray, left_next: float, right_next: float):
+    def backward(self, data: _np.ndarray, left_next: float, right_next: float):
         """
         向后差分格式的计算
         u_{n-1} = A * u_{n+1}
