@@ -10,7 +10,6 @@ axes.set_xticks(np.arange(-1, 1.1, 0.1))
 axes.set_xticklabels(['{:.1f}'.format(index / 10 - 1) if index % 2 == 0 else '' for index in range(22)])
 axes.set_yticks(np.arange(-1, 1.1, 0.1))
 fig.savefig(plot.get_figure_path('q2_2/网格'))
-exit()
 
 
 def draw_and_save(data, grid_step, title):
