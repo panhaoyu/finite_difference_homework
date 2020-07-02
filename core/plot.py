@@ -21,13 +21,15 @@ def check_and_set_ticks(axes, xticks, yticks):
 
 def plot_line(
         x, y, *args, figure: plt.Figure = None, axes: plt.Axes = None,
-        xticks=None, yticks=None, **kwargs):
+        xticks=None, yticks=None, xlabel=None, ylabel=None, **kwargs):
     figure: plt.Figure = plt.gcf() if figure is None else figure
-    if not axes:
-        axes = plt.gca()
+    axes: plt.Axes = plt.gca() if axes is None else axes
 
     # 设置刻度
     check_and_set_ticks(axes, xticks, yticks)
+
+    xlabel is None or axes.set_xlabel(xlabel)
+    ylabel is None or axes.set_ylabel(ylabel)
 
     axes.plot(x, y, *args, **kwargs)
     return figure
@@ -64,7 +66,7 @@ def plot_surface(
     return figure
 
 
-def figure_path(file_name):
+def get_figure_path(file_name):
     path = os.path.join(settings.FIGURE_PATH, file_name)
     dir_name = os.path.dirname(path)
     os.path.exists(dir_name) or os.makedirs(dir_name)

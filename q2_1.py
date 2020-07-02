@@ -42,20 +42,24 @@ for index in range(2, len(t)):
 # 计算精确解
 u_accurate = np.exp(-np.pi * np.pi * 0.1) * np.sin(np.pi * x)
 
-figure = plt.figure()
-grid = plt.GridSpec(1, 2, figure=figure)
-plot.plot_surface(u_forward_history, xticks=x, yticks=t[::10], figure=grid[0, 0])
-plot.plot_line(x, u_accurate, 'k-', figure=grid[0, 0], xticks=x)
-plot.plot_line(x, u_forward_history[-1, :], 'gx', figure=grid[0, 1], xticks=x)
-figure.savefig(plot.figure_path('q2_1/向前差分格式'))
 
-plot.plot_surface(u_backward_history, xticks=x, yticks=t[::10]).savefig(plot.figure_path('q2_1/向后差分格式'))
-plot.plot_surface(u_crank_history, xticks=x, yticks=t[::10]).savefig(plot.figure_path('q2_1/Crank-Nicolson格式'))
-plot.plot_surface(u_du_fort_history, xticks=x, yticks=t[::10]).savefig(plot.figure_path('q2_1/Du Fort-Frankel格式'))
+def plot_procedure_and_result(u_history, name):
+    figure: plt.Figure = plt.figure()
 
-figure: plt.Figure = plt.figure()
-figure = plot.plot_line(x, u_backward_history[-1, :], 'r+', figure=figure, xticks=x)
-figure = plot.plot_line(x, u_crank_history[-1, :], 'bo', figure=figure, xticks=x)
-figure = plot.plot_line(x, u_du_fort_history[-1, :], 'ys', figure=figure, xticks=x)
-figure.legend(['精确解', '向前差分格式', '向后差分格式', 'Crank-Nicolson格式', 'Du Fort-Frankel格式'])
-figure.savefig(plot.figure_path('q2_1/计算结果'))
+    axes_surface: plt.Axes = figure.add_subplot(121)
+    axes_surface.set_title('计算过程')
+    plot.plot_surface(u_history, xticks=x, yticks=t[::10], axes=axes_surface, show_colorbar=True)
+
+    axes_line: plt.Axes = figure.add_subplot(122)
+    axes_line.set_title('计算结果')
+    axes_line.set_ylim(0, 0.4)
+    plot.plot_line(x, u_accurate, 'k-', axes=axes_line, xticks=x)
+    plot.plot_line(x, u_history[-1, :], 'rx', axes=axes_line, xticks=x)
+    axes_line.legend(('精确解', name))
+    figure.savefig(plot.get_figure_path(f'q2_1/{name}'))
+
+
+plot_procedure_and_result(u_forward_history, '向前差分')
+plot_procedure_and_result(u_backward_history, '向后差分')
+plot_procedure_and_result(u_crank_history, 'Crank Nicolson')
+plot_procedure_and_result(u_du_fort_history, 'Du Fort-frankel')
