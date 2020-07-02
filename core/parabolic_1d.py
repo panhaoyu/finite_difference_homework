@@ -2,6 +2,7 @@
 import numpy as _np
 from numpy import ndarray as _ndarray
 from .solver import Solver as _Solver
+from .utils.matrix import create_tridiagonal_matrix as _create_tridiagonal_matrix
 
 
 class Parabolic1D(_Solver):
@@ -47,10 +48,7 @@ class Parabolic1D(_Solver):
         data = data.astype(float)
 
         # 计算系数矩阵的逆
-        matrix = _np.diag(_np.ones(len(data)) * (2 * self.a_lmd + 1)).astype(float)
-        for index in range(len(data) - 1):
-            matrix[index, index + 1] -= self.a_lmd
-            matrix[index + 1, index] -= self.a_lmd
+        matrix = _create_tridiagonal_matrix(len(data), 2 * self.a_lmd + 1, -self.a_lmd, -self.a_lmd)
         matrix = _np.linalg.inv(matrix)
 
         # 计算当前时间步的值，采用下一时间步的左右值进行修正
@@ -76,9 +74,7 @@ class Parabolic1D(_Solver):
 
         # 计算前一层的矩阵
         length = len(data)
-        matrix_this = _np.diag(_np.ones(length) * (1 - 2 * b)).astype(float)
-        matrix_this[1:, :-1] += _np.diag(_np.ones(length - 1) * b)
-        matrix_this[:-1, 1:] += _np.diag(_np.ones(length - 1) * b)
+        matrix_this = _create_tridiagonal_matrix(length, (1 - 2 * b), b, b)
 
         # 计算前一层的向量
         vector_this = _np.dot(matrix_this, data)
@@ -89,9 +85,7 @@ class Parabolic1D(_Solver):
         vector_this[-1] += b * (right + right_next)
 
         # 计算下一层的矩阵
-        matrix_next = _np.diag(_np.ones(length) * (1 + 2 * b)).astype(float)
-        matrix_next[1:, :-1] += _np.diag(_np.ones(length - 1) * (-b))
-        matrix_next[:-1, 1:] += _np.diag(_np.ones(length - 1) * (-b))
+        matrix_next = _create_tridiagonal_matrix(length, (1 + 2 * b), -b, -b)
 
         u1 = _np.dot(_np.linalg.inv(matrix_next), vector_this)[0:, 0]
         return u1
