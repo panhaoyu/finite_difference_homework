@@ -10,11 +10,11 @@ u0 = np.sin(x * np.pi)
 u_forward_history = np.array([u0])
 u_backward_history = np.array([u0])
 u_crank_history = np.array([u0])
-t = np.arange(0, 0.101, 0.001)
+t = np.arange(0, 0.105, 0.005)
 left = t * 0
 right = t * 0
 
-calculator = Parabolic1D(a=1, time_step=0.001, grid_step=0.1)
+calculator = Parabolic1D(a=1, time_step=0.005, grid_step=0.1)
 
 for index in range(1, len(t)):
     t_i, t_next_i = t[index - 1], t[index]
@@ -65,12 +65,12 @@ def plot_procedure_and_result(u_history, name):
 
     ax3: plt.Axes = figure.add_subplot(grid[1, 1])
     plot.plot_line(x, (u_history[-1, :] - u_accurate) * 1E3, 'bx', axes=ax3, xticks=x[::2])
-    ax3.set_ylim(0, 5)
+    ax3.set_ylim(-10, 20)
     ax3.set_xlabel('x', labelpad=-3)
     ax3.set_ylabel('$\Delta y/10^{-3}$', labelpad=-1)
     ax3.set_title('误差')
 
-    figure.savefig(plot.get_figure_path(f'q2_1/λ=0.1/{name}'))
+    figure.savefig(plot.get_figure_path(f'q2_1/λ=0.5/{name}'))
 
 
 plot_procedure_and_result(u_forward_history, '向前差分')
