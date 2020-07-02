@@ -1,9 +1,10 @@
 # 这个模块用于记录一维抛物型方程的差分函数
 import numpy as _np
 from numpy import ndarray as _ndarray
+from .solver import Solver as _Solver
 
 
-class Parabolic1D(object):
+class Parabolic1D(_Solver):
     def __init__(self, a: float, time_step: float, grid_step: float):
         """
         在对象进行初始化时，输入描述方程的一些参数，即在每一次时间步前进的过程中不变的数
