@@ -10,11 +10,24 @@ import numpy as np
 # axes.set_yticks(np.arange(0, 1.1, 0.1))
 # fig.savefig(plot.get_figure_path('q2_2/网格'))
 
-calculator = poisson_2d.Poisson2D(0.1, 0.1)
-calculator.five_point(
-    np.ones((3, 4), float) * 16,
-    top=np.ones(4, float) * 0,
-    bottom=np.ones(4, float) * 0,
-    left=np.ones(3, float) * 1,
-    right=np.ones(3, float) * 0,
+delta_x = delta_y = 0.025
+calculator = poisson_2d.Poisson2D(delta_x, delta_y)
+x, y = np.meshgrid(np.arange(-1, 1 + delta_x, delta_x), np.arange(-1, 1 + delta_y, delta_y))
+result = calculator.five_point(
+    delta_u=x[1:-1, 1:-1] * 0 + 16,
+    top=x[0, 1:-1] * 0,
+    bottom=x[-1, 1:-1] * 0,
+    left=x[1:-1, 0] * 0,
+    right=x[1:-1, -1] * 0,
 )
+data = x * 0
+data[1:-1, 1:-1] = result
+figure: plt.Figure = plt.figure()
+axes: plt.Axes = figure.add_axes((0.1, 0.1, 0.9, 0.8))
+plot.plot_surface(data, figure=figure, axes=axes,
+                  extent=(-1 - delta_x / 2, 1 + delta_x / 2, -1 - delta_x / 2, 1 + delta_x / 2))
+axes.set_xlim(-1 - delta_x / 2, 1 + delta_x / 2)
+axes.set_ylim(-1 - delta_x / 2, 1 + delta_x / 2)
+axes.set_xticks(np.arange(-1, 1 + delta_x, 0.2))
+axes.set_yticks(np.arange(-1, 1 + delta_x, 0.2))
+figure.savefig(plot.get_figure_path('q2_2/结果-细分'))
