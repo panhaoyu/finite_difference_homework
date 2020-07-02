@@ -10,7 +10,7 @@ def create_tridiagonal_matrix(length, center, upper, lower):
     :param lower: 下面的值
     :return:
     """
-    matrix = _np.diag(_np.ones(length) * center)
+    matrix = _np.diag(_np.ones(length) * center).astype(float)
     matrix[:-1, 1:] += _np.diag(_np.ones(length - 1) * upper)
     matrix[1:, :-1] += _np.diag(_np.ones(length - 1) * lower)
     return matrix
