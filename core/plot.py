@@ -37,10 +37,11 @@ def plot_line(
 
 def plot_surface(
         data, show_colorbar=True, extent=None, vmin=None, vmax=None, xticks=None, yticks=None,
-        axes: plt.Axes = None, figure: plt.Figure = None):
+        axes: plt.Axes = None, figure: plt.Figure = None, reverse=True):
     assert len(set(map(len, data))) == 1
     # 对数据进行倒序，以保证初值在最下边
-    data = data[::-1]
+    if reverse:
+        data = data[::-1]
     # 获取图像和坐标轴对象
     figure = plt.figure() if figure is None else figure
     axes = plt.axes() if axes is None else axes
