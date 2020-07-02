@@ -61,7 +61,7 @@ def plot_surface(
         cmap=plt.cm.jet, extent=extent, aspect='auto')
     # 显示彩虹条图例
     if show_colorbar:
-        plt.colorbar(image)
+        plt.colorbar(image, ax=axes)
 
     return figure
 

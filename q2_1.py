@@ -4,7 +4,6 @@ import numpy as np
 from core import plot
 from core.parabolic_1d import Parabolic1D
 import matplotlib.pyplot as plt
-from core import settings
 
 x = np.arange(0, 1.1, 0.1)
 u0 = np.sin(x * np.pi)
@@ -45,18 +44,33 @@ u_accurate = np.exp(-np.pi * np.pi * 0.1) * np.sin(np.pi * x)
 
 def plot_procedure_and_result(u_history, name):
     figure: plt.Figure = plt.figure()
+    grid = plt.GridSpec(2, 2, figure=figure, wspace=0.3, hspace=0.5)
 
-    axes_surface: plt.Axes = figure.add_subplot(121)
-    axes_surface.set_title('计算过程')
-    plot.plot_surface(u_history, xticks=x, yticks=t[::10], axes=axes_surface, show_colorbar=True)
+    # 绘制二维图
+    ax1: plt.Axes = figure.add_subplot(grid[0:2, 0])
+    ax1.set_title('计算过程')
+    plot.plot_surface(u_history, xticks=x[::2], yticks=t[::10], axes=ax1, show_colorbar=True)
+    ax1.set_xlabel('x', labelpad=-3)
+    ax1.set_ylabel('t', labelpad=-1)
 
-    axes_line: plt.Axes = figure.add_subplot(122)
-    axes_line.set_title('计算结果')
-    axes_line.set_ylim(0, 0.4)
-    plot.plot_line(x, u_accurate, 'k-', axes=axes_line, xticks=x)
-    plot.plot_line(x, u_history[-1, :], 'rx', axes=axes_line, xticks=x)
-    axes_line.legend(('精确解', name))
-    figure.savefig(plot.get_figure_path(f'q2_1/{name}'))
+    # 绘制结果图
+    ax2: plt.Axes = figure.add_subplot(grid[0, 1])
+    ax2.set_title('计算结果')
+    ax2.set_ylim(0, 0.4)
+    plot.plot_line(x, u_accurate, 'k-', axes=ax2, xticks=x[::2])
+    plot.plot_line(x, u_history[-1, :], 'rx', axes=ax2, xticks=x[::2])
+    ax2.set_xlabel('x', labelpad=-3)
+    ax2.set_ylabel('u', labelpad=-1)
+    ax2.legend(('精确解', name))
+
+    ax3: plt.Axes = figure.add_subplot(grid[1, 1])
+    plot.plot_line(x, (u_history[-1, :] - u_accurate) * 1E3, 'bx', axes=ax3, xticks=x[::2])
+    ax3.set_ylim(0, 5)
+    ax3.set_xlabel('x', labelpad=-3)
+    ax3.set_ylabel('$\Delta y/10^{-3}$', labelpad=-1)
+    ax3.set_title('误差')
+
+    figure.savefig(plot.get_figure_path(f'q2_1/λ=0.1/{name}'))
 
 
 plot_procedure_and_result(u_forward_history, '向前差分')
